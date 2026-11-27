@@ -12,7 +12,16 @@ part 'app_database.g.dart';
 /// `id`, `user_id`, `updated_at` e `deleted`.
 @DriftDatabase(tables: [Surveys, Points])
 class AppDatabase extends _$AppDatabase with SyncableDatabase {
-  AppDatabase() : super(driftDatabase(name: 'geofield'));
+  AppDatabase()
+      : super(
+          driftDatabase(
+            name: 'geofield',
+            web: DriftWebOptions(
+              sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+              driftWorker: Uri.parse('drift_worker.js'),
+            ),
+          ),
+        );
 
   @override
   int get schemaVersion => 1;
