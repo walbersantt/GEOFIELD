@@ -1,12 +1,14 @@
-import 'package:material_ui/material_ui.dart';
+﻿import 'package:material_ui/material_ui.dart';
 
 import '../../data/app_database.dart';
 import '../../data/repositories/point_repository.dart';
 import '../../data/repositories/survey_repository.dart';
 import '../../models/point.dart';
 import '../../models/survey.dart';
+import '../camera/camera_screen.dart';
 import '../notes/notes_screen.dart';
 import '../photo/photo_screen.dart';
+import 'gps_quality_screen.dart';
 import 'measure_calculations.dart';
 
 // Mantém o teste existente importando apenas measure_screen.dart.
@@ -166,51 +168,34 @@ class _MeasureScreenState extends State<MeasureScreen> {
     await _loadPoints(surveyId);
   }
 
-  Future<void> _confirmFinish() async {
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: _colorSurface,
-          title: const Text(
-            'Finalizar levantamento',
-            style: TextStyle(color: _colorText, fontSize: 18),
-          ),
-          content: const Text(
-            'Deseja finalizar o levantamento? Os dados serão salvos apenas no banco local.',
-            style: TextStyle(color: _colorSecondary, fontSize: 14),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Finalizar'),
-            ),
-          ],
-        );
-      },
-    );
-    if (confirmed != true || !mounted) return;
-
-    final String surveyId = await _resolveSurveyId();
-    await _surveyRepository.finalizeSurvey(surveyId);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Levantamento finalizado e salvo no banco local.',
-          style: TextStyle(
-            color: _colorSurface,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 20 / 14,
-          ),
-        ),
-        backgroundColor: _colorText,
+  void _openNotes() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => NotesScreen(surveyId: _surveyId),
       ),
+    );
+  }
+
+  void _openCamera() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CameraScreen(surveyId: _surveyId),
+      ),
+    );
+  }
+
+  void _openPhotoLegacy() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PhotoScreen(surveyId: _surveyId),
+      ),
+    );
+  }
+
+  void _openGpsQuality() {
+    // Finalizar passa pela checagem de precisão antes de qualquer persistência.
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const GpsQualityScreen()),
     );
   }
 
@@ -242,26 +227,23 @@ class _MeasureScreenState extends State<MeasureScreen> {
                 firstIcon: Icons.add,
                 onFirst: _collectPoint,
                 secondLabel: 'Finalizar',
-                onSecond: _confirmFinish,
+                onSecond: _openGpsQuality,
               ),
               const SizedBox(height: 12),
               _ActionButtonRow(
                 firstLabel: 'Registrar anotações',
-                onFirst: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => NotesScreen(surveyId: _surveyId),
-                    ),
-                  );
-                },
+                onFirst: _openNotes,
                 secondLabel: 'Fotografar',
-                onSecond: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => PhotoScreen(surveyId: _surveyId),
-                    ),
-                  );
-                },
+                onSecond: _openCamera,
+              ),
+              const SizedBox(height: 12),
+              // Acesso à tela de fotos do CRUD (PhotoScreen) para não perder a
+              // integração com surveyId enquanto a câmera do MVP é simulada.
+              _ActionButtonRow(
+                firstLabel: 'Galeria',
+                onFirst: _openPhotoLegacy,
+                secondLabel: 'Finalizar',
+                onSecond: _openGpsQuality,
               ),
               const SizedBox(height: 24),
               _PointList(points: _points),

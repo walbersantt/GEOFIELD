@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
 
@@ -6,9 +6,9 @@ import '../../data/app_database.dart';
 import '../../data/repositories/survey_repository.dart';
 import '../../models/survey.dart';
 import '../../services/auth_service.dart';
+import '../camera/camera_screen.dart';
 import '../measure/measure_screen.dart';
 import '../notes/notes_screen.dart';
-import '../photo/photo_screen.dart';
 import '../survey_details/survey_details_screen.dart';
 import '../surveys/surveys_screen.dart';
 
@@ -219,7 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Acesso provisório até existir roteamento definitivo.
                   Expanded(
                     child: _QuickAccessCard(
                       icon: Icons.edit_note,
@@ -239,7 +238,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  // Acesso provisório até existir roteamento definitivo.
                   Expanded(
                     child: _QuickAccessCard(
                       icon: Icons.photo_camera,
@@ -248,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
-                            builder: (_) => const PhotoScreen(),
+                            builder: (_) => const CameraScreen(),
                           ),
                         );
                       },

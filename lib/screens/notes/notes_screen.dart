@@ -1,4 +1,4 @@
-import 'package:material_ui/material_ui.dart';
+﻿import 'package:material_ui/material_ui.dart';
 
 import '../../data/app_database.dart';
 import '../../data/repositories/survey_repository.dart';
@@ -194,7 +194,7 @@ class _NotesHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Registrar anotações',
                 style: TextStyle(
                   color: _colorText,
@@ -202,7 +202,7 @@ class _NotesHeader extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: const TextStyle(
