@@ -1,5 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../camera/camera_screen.dart';
+import 'gps_quality_screen.dart';
+import '../notes/notes_screen.dart';
+
 // Tokens de DESIGN.md; valores que só existem no print 3 estão marcados
 // no ponto de uso.
 const Color _colorBackground = Color(0xFF234B3A);
@@ -92,65 +96,22 @@ class _MeasureScreenState extends State<MeasureScreen> {
     });
   }
 
-  void _showSoon() {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Em breve',
-          style: TextStyle(
-            color: _colorSurface,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 20 / 14,
-          ),
-        ),
-        backgroundColor: _colorText,
-      ),
+  void _openNotes() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const NotesScreen()),
     );
   }
 
-  Future<void> _confirmFinish() async {
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: _colorSurface,
-          title: const Text(
-            'Finalizar levantamento',
-            style: TextStyle(color: _colorText, fontSize: 18),
-          ),
-          content: const Text(
-            'Deseja finalizar o levantamento? Esta ação ainda não persiste os dados.',
-            style: TextStyle(color: _colorSecondary, fontSize: 14),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Finalizar'),
-            ),
-          ],
-        );
-      },
+  void _openCamera() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const CameraScreen()),
     );
-    if (confirmed != true || !mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Levantamento finalizado (simulação). A persistência será implementada na próxima etapa.',
-          style: TextStyle(
-            color: _colorSurface,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 20 / 14,
-          ),
-        ),
-        backgroundColor: _colorText,
-      ),
+  }
+
+  void _openGpsQuality() {
+    // Finalizar passa pela checagem de precisão antes de qualquer persistência.
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const GpsQualityScreen()),
     );
   }
 
@@ -182,14 +143,14 @@ class _MeasureScreenState extends State<MeasureScreen> {
                 firstIcon: Icons.add,
                 onFirst: _collectPoint,
                 secondLabel: 'Finalizar',
-                onSecond: _confirmFinish,
+                onSecond: _openGpsQuality,
               ),
               const SizedBox(height: 12),
               _ActionButtonRow(
                 firstLabel: 'Registrar anotações',
-                onFirst: _showSoon,
+                onFirst: _openNotes,
                 secondLabel: 'Fotografar',
-                onSecond: _showSoon,
+                onSecond: _openCamera,
               ),
               const SizedBox(height: 24),
               _PointList(points: _points),

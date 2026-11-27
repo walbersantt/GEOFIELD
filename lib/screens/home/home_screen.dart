@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 
 import '../../services/auth_service.dart';
+import '../camera/camera_screen.dart';
 import '../measure/measure_screen.dart';
+import '../notes/notes_screen.dart';
+import '../surveys/survey_details_screen.dart';
 
 // Tokens extraídos de DESIGN.md. Valores que só existem no print 2 estão
 // marcados em comentário no ponto de uso.
@@ -159,11 +162,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: _QuickAccessCard(
                       icon: Icons.edit_note,
                       title: 'Registrar anotações',
                       subtitle: 'Observações do campo',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const NotesScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -171,11 +181,18 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: _QuickAccessCard(
                       icon: Icons.photo_camera,
                       title: 'Fotografar',
                       subtitle: 'Registrar evidências',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const CameraScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -191,9 +208,15 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               _SurveyStatusCard(
                 label: 'Último levantamento',
-                // CRUD de levantamentos ainda não implementado: sem dado fictício.
-                value: 'Nenhum levantamento finalizado ainda',
-                onTap: _showSoon,
+                // Mock do print 7 até existir o CRUD de levantamentos.
+                value: 'Sítio Boa Vista',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SurveyDetailsScreen(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -319,7 +342,8 @@ class _QuickAccessCard extends StatelessWidget {
         child: InkWell(
           // Destinos ainda não existem: feedback em vez de navegação inválida.
           // "Medir terreno" já recebe um onTap próprio na Home.
-          onTap: onTap ??
+          onTap:
+              onTap ??
               () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
