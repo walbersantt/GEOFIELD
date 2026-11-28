@@ -7,7 +7,6 @@ import '../../models/point.dart';
 import '../../models/survey.dart';
 import '../camera/camera_screen.dart';
 import '../notes/notes_screen.dart';
-import '../photo/photo_screen.dart';
 import 'gps_quality_screen.dart';
 import 'measure_calculations.dart';
 
@@ -184,14 +183,6 @@ class _MeasureScreenState extends State<MeasureScreen> {
     );
   }
 
-  void _openPhotoLegacy() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => PhotoScreen(surveyId: _surveyId),
-      ),
-    );
-  }
-
   void _openGpsQuality() {
     // Finalizar passa pela checagem de precisão antes de qualquer persistência.
     Navigator.of(context).push(
@@ -235,15 +226,6 @@ class _MeasureScreenState extends State<MeasureScreen> {
                 onFirst: _openNotes,
                 secondLabel: 'Fotografar',
                 onSecond: _openCamera,
-              ),
-              const SizedBox(height: 12),
-              // Acesso à tela de fotos do CRUD (PhotoScreen) para não perder a
-              // integração com surveyId enquanto a câmera do MVP é simulada.
-              _ActionButtonRow(
-                firstLabel: 'Galeria',
-                onFirst: _openPhotoLegacy,
-                secondLabel: 'Finalizar',
-                onSecond: _openGpsQuality,
               ),
               const SizedBox(height: 24),
               _PointList(points: _points),

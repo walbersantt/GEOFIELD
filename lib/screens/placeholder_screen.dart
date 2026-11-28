@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:material_ui/material_ui.dart';
 import '../theme/app_colors.dart';
 
-/// Tela provisória, usada enquanto uma aba ainda não foi construída.
-/// Quando a tela real ficar pronta, é só trocá-la no MainShell.
+/// Tela provisÃ³ria, usada enquanto uma aba ainda nÃ£o foi construÃ­da.
+/// Quando a tela real ficar pronta, Ã© sÃ³ trocÃ¡-la no MainShell.
 class PlaceholderScreen extends StatelessWidget {
   final String title;
 
@@ -26,7 +26,7 @@ class PlaceholderScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Esta tela será construída nas próximas etapas.',
+                'Esta tela serÃ¡ construÃ­da nas prÃ³ximas etapas.',
                 style: TextStyle(color: AppColors.textSecondary),
               ),
             ],

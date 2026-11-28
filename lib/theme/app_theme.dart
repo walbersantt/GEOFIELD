@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:material_ui/material_ui.dart';
 import 'app_colors.dart';
 
-/// Define o "tema": a aparência padrão dos componentes do app.
+/// Define o "tema": a aparÃªncia padrÃ£o dos componentes do app.
 class AppTheme {
   AppTheme._();
 
@@ -43,8 +43,8 @@ class AppTheme {
         ),
       ),
 
-      // NOVO: barra de navegação inferior.
-      // indicatorColor é a "pílula" que destaca a aba selecionada.
+      // NOVO: barra de navegaÃ§Ã£o inferior.
+      // indicatorColor Ã© a "pÃ­lula" que destaca a aba selecionada.
       navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: AppColors.backgroundAlt,
         indicatorColor: AppColors.softGreen,

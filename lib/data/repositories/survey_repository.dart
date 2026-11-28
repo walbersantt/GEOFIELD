@@ -1,24 +1,29 @@
-import 'package:drift/drift.dart';
+﻿import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/survey.dart';
 import '../../services/auth_service.dart';
 import '../app_database.dart';
+import '../sync_service.dart';
 
 /// CRUD local de levantamentos sobre o Drift.
 ///
-/// Nenhuma chamada ao Supabase acontece aqui: a sincronização será ligada em
-/// etapa posterior. Com `kDevBypassAuth = true`, `AuthService.currentUserId`
-/// retorna null; a coluna local `user_id` é anulável e aceita isso, mas o RLS
-/// do Supabase ainda exigirá um usuário real quando a sync for ativada.
+/// Ao criar, atualizar ou excluir logicamente, também tenta enviar a mudança
+/// ao Supabase quando há usuário autenticado e conectividade/configuração.
 class SurveyRepository {
-  SurveyRepository(this._db, {AuthService? authService, Uuid? uuid})
-      : _authService = authService ?? AuthService(),
-        _uuid = uuid ?? const Uuid();
+  SurveyRepository(
+    this._db, {
+    AuthService? authService,
+    Uuid? uuid,
+    SyncService? syncService,
+  })  : _authService = authService ?? AuthService(),
+        _uuid = uuid ?? const Uuid(),
+        _syncService = syncService ?? SyncService.instance;
 
   final AppDatabase _db;
   final AuthService _authService;
   final Uuid _uuid;
+  final SyncService? _syncService;
 
   /// Levantamentos ativos, do mais recente para o mais antigo.
   Stream<List<Survey>> watchAllSurveys() {
@@ -52,7 +57,7 @@ class SurveyRepository {
   }
 
   /// Cria um levantamento local com id UUID e datas em UTC.
-  Future<void> createSurvey({
+  Future<Survey> createSurvey({
     required String name,
     required String description,
   }) async {
@@ -69,6 +74,8 @@ class SurveyRepository {
       deleted: false,
     );
     await _db.into(_db.surveys).insert(survey.toCompanion());
+    await _syncService?.pushSurvey(survey);
+    return survey;
   }
 
   /// Atualiza nome/descrição de um levantamento local.
@@ -89,6 +96,7 @@ class SurveyRepository {
         updatedAt: Value(DateTime.now().toUtc()),
       ),
     );
+    await _pushById(id);
   }
 
   /// Registra a finalização no banco local.
@@ -102,6 +110,7 @@ class SurveyRepository {
         updatedAt: Value(DateTime.now().toUtc()),
       ),
     );
+    await _pushById(id);
   }
 
   /// Exclusão lógica: nunca remove a linha do banco.
@@ -112,5 +121,12 @@ class SurveyRepository {
         updatedAt: Value(DateTime.now().toUtc()),
       ),
     );
+    await _pushById(id);
+  }
+
+  Future<void> _pushById(String id) async {
+    final survey = await (_db.select(_db.surveys)..where((r) => r.id.equals(id)))
+        .getSingleOrNull();
+    if (survey != null) await _syncService?.pushSurvey(survey);
   }
 }

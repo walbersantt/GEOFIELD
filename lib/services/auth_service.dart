@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../config/supabase_config.dart';
 
 /// URL de retorno usada tanto no OAuth do Google quanto no link de recuperação.
 ///
-/// Valor definido pelo projeto e cadastrado no Supabase em
+/// No mobile, usa o deep link do app. No web, usa a origem atual do navegador
+/// (ex.: http://localhost:8080), que deve estar cadastrada no Supabase em
 /// Authentication -> URL Configuration -> Redirect URLs.
-const String kAuthRedirectTo = 'geofield://login-callback';
+String get kAuthRedirectTo =>
+    kIsWeb ? Uri.base.origin : 'geofield://login-callback';
 
 /// Estado de autenticação simplificado para a camada de UI.
 enum AuthStatus { authenticated, unauthenticated }
@@ -121,14 +124,22 @@ class AuthService {
   ///
   /// O resultado bem-sucedido é observado por [onAuthStateChange], conforme
   /// contrato do `signInWithOAuth` do supabase_flutter.
+  Future<bool> signInWithGoogle() {
+    return signInWithOAuth(
+      provider: OAuthProvider.google,
+      redirectTo: kAuthRedirectTo,
+    );
+  }
+
   Future<bool> signInWithOAuth({
     OAuthProvider provider = OAuthProvider.google,
-    String redirectTo = kAuthRedirectTo,
+    String? redirectTo,
   }) async {
+    final String resolvedRedirectTo = redirectTo ?? kAuthRedirectTo;
     try {
       final bool launched = await _auth.signInWithOAuth(
         provider,
-        redirectTo: redirectTo,
+        redirectTo: resolvedRedirectTo,
       );
       if (!launched) {
         throw const AuthFailure(
@@ -154,12 +165,13 @@ class AuthService {
 
   Future<void> resetPasswordForEmail({
     required String email,
-    String redirectTo = kAuthRedirectTo,
+    String? redirectTo,
   }) {
+    final String resolvedRedirectTo = redirectTo ?? kAuthRedirectTo;
     return _runAuth(
       () => _auth.resetPasswordForEmail(
         email.trim(),
-        redirectTo: redirectTo,
+        redirectTo: resolvedRedirectTo,
       ),
     );
   }

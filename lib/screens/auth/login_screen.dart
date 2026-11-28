@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../../services/auth_service.dart';
@@ -50,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  bool _isGoogleLoading = false;
+
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
@@ -67,6 +71,20 @@ class _LoginScreenState extends State<LoginScreen> {
       _showError(error.message);
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _submitGoogle() async {
+    FocusScope.of(context).unfocus();
+    setState(() => _isGoogleLoading = true);
+    try {
+      await widget.authService.signInWithGoogle();
+      // O sucesso chega via onAuthStateChange; não forçamos navegação aqui.
+    } on AuthFailure catch (error) {
+      if (!mounted) return;
+      _showError(error.message);
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
     }
   }
 
@@ -156,7 +174,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 _AuthPrimaryButton(
                   label: 'Entrar',
                   isLoading: _isLoading,
-                  onPressed: _submit,
+                  onPressed: (_isLoading || _isGoogleLoading)
+                      ? () {}
+                      : () {
+                          unawaited(_submit());
+                        },
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: (_isLoading || _isGoogleLoading)
+                      ? null
+                      : () {
+                          unawaited(_submitGoogle());
+                        },
+                  icon: _isGoogleLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.g_mobiledata, size: 28),
+                  label: const Text('Entrar com Google'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    foregroundColor: _colorTextPrimary,
+                    side: const BorderSide(color: _colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      height: 24 / 16,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 _AuthFooterLink(

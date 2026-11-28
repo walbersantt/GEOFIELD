@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
+﻿import 'package:material_ui/material_ui.dart';
 import '../theme/app_colors.dart';
 
-/// Tela Início.
-/// ATENÇÃO: todos os textos e números aqui são dados de EXEMPLO.
-/// Na Etapa 4 eles passarão a vir do banco de dados.
+/// Tela InÃ­cio.
+/// ATENÃ‡ÃƒO: todos os textos e nÃºmeros aqui sÃ£o dados de EXEMPLO.
+/// Na Etapa 4 eles passarÃ£o a vir do banco de dados.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // Nome fixo, provisório. Depois virá do Perfil.
-  static const String _userName = 'César';
+  // Nome fixo, provisÃ³rio. Depois virÃ¡ do Perfil.
+  static const String _userName = 'CÃ©sar';
 
-  // Mensagem temporária enquanto as funcionalidades não existem.
+  // Mensagem temporÃ¡ria enquanto as funcionalidades nÃ£o existem.
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature: disponível nas próximas etapas')),
+      SnackBar(content: Text('$feature: disponÃ­vel nas prÃ³ximas etapas')),
     );
   }
 
@@ -21,14 +21,14 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        // SingleChildScrollView permite rolar a tela se o conteúdo
-        // não couber (celulares menores).
+        // SingleChildScrollView permite rolar a tela se o conteÃºdo
+        // nÃ£o couber (celulares menores).
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ---- Cabeçalho: saudação + ícone de perfil ----
+              // ---- CabeÃ§alho: saudaÃ§Ã£o + Ã­cone de perfil ----
               Row(
                 children: [
                   const Expanded(
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Olá, $_userName',
+                          'OlÃ¡, $_userName',
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w800,
@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          'O que você quer fazer hoje?',
+                          'O que vocÃª quer fazer hoje?',
                           style: TextStyle(
                             fontSize: 15,
                             color: AppColors.textSecondary,
@@ -67,15 +67,15 @@ class HomeScreen extends StatelessWidget {
 
               // ---- Levantamento em andamento ----
               _CurrentSurveyCard(
-                title: 'Terreno — Piedade',
-                info: '11 pontos · atualizado agora',
+                title: 'Terreno â€” Piedade',
+                info: '11 pontos Â· atualizado agora',
                 onTap: () => _showComingSoon(context, 'Levantamento'),
               ),
               const SizedBox(height: 28),
 
-              // ---- Acesso rápido (grade 2x2) ----
+              // ---- Acesso rÃ¡pido (grade 2x2) ----
               const Text(
-                'Acesso rápido',
+                'Acesso rÃ¡pido',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 12),
@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                       child: _QuickActionCard(
                         icon: Icons.straighten,
                         title: 'Medir terreno',
-                        subtitle: 'Pontos, área e perímetro',
+                        subtitle: 'Pontos, Ã¡rea e perÃ­metro',
                         onTap: () => _showComingSoon(context, 'Medir terreno'),
                       ),
                     ),
@@ -99,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                       child: _QuickActionCard(
                         icon: Icons.photo_camera_outlined,
                         title: 'Fotografar',
-                        subtitle: 'Registrar evidências',
+                        subtitle: 'Registrar evidÃªncias',
                         onTap: () => _showComingSoon(context, 'Fotografar'),
                       ),
                     ),
@@ -114,10 +114,10 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                       child: _QuickActionCard(
                         icon: Icons.edit_note,
-                        title: 'Registrar anotações',
-                        subtitle: 'Observações do campo',
+                        title: 'Registrar anotaÃ§Ãµes',
+                        subtitle: 'ObservaÃ§Ãµes do campo',
                         onTap: () =>
-                            _showComingSoon(context, 'Registrar anotações'),
+                            _showComingSoon(context, 'Registrar anotaÃ§Ãµes'),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -135,12 +135,12 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 28),
 
-              // ---- Último levantamento ----
+              // ---- Ãšltimo levantamento ----
               _LastSurveyCard(
-                title: 'Sítio Boa Vista',
-                location: 'Vitória de Santo Antão · PE',
-                info: '24 abr · 18 pontos coletados',
-                onTap: () => _showComingSoon(context, 'Último levantamento'),
+                title: 'SÃ­tio Boa Vista',
+                location: 'VitÃ³ria de Santo AntÃ£o Â· PE',
+                info: '24 abr Â· 18 pontos coletados',
+                onTap: () => _showComingSoon(context, 'Ãšltimo levantamento'),
               ),
             ],
           ),
@@ -206,7 +206,7 @@ class _CurrentSurveyCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // Botão redondo com seta.
+              // BotÃ£o redondo com seta.
               Container(
                 width: 40,
                 height: 40,
@@ -228,7 +228,7 @@ class _CurrentSurveyCard extends StatelessWidget {
   }
 }
 
-/// Card do "Acesso rápido": ícone, título e uma linha de explicação.
+/// Card do "Acesso rÃ¡pido": Ã­cone, tÃ­tulo e uma linha de explicaÃ§Ã£o.
 class _QuickActionCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -288,7 +288,7 @@ class _QuickActionCard extends StatelessWidget {
   }
 }
 
-/// Card do último levantamento concluído.
+/// Card do Ãºltimo levantamento concluÃ­do.
 class _LastSurveyCard extends StatelessWidget {
   final String title;
   final String location;
@@ -316,7 +316,7 @@ class _LastSurveyCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Último levantamento',
+                'Ãšltimo levantamento',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,

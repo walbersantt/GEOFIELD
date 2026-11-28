@@ -9,4 +9,4 @@
 /// IMPORTANTE: esta flag deve ser definida como false antes de qualquer build
 /// de produção ou teste de integração com Supabase. Não é lida de .env nem de
 /// SharedPreferences: é uma constante em tempo de compilação.
-const bool kDevBypassAuth = true;
+const bool kDevBypassAuth = false;

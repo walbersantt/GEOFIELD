@@ -68,9 +68,10 @@ void main() {
   testWidgets('Finalizar em Medir terreno abre a checagem de GPS',
       (tester) async {
     await tester.pumpWidget(const MaterialApp(home: MeasureScreen()));
-    await tester.ensureVisible(find.text('Finalizar'));
+    final Finder finalizar = find.text('Finalizar').last;
+    await tester.ensureVisible(finalizar);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Finalizar'));
+    await tester.tap(finalizar);
     await tester.pumpAndSettle();
 
     expect(find.text('Qualidade do GPS'), findsOneWidget);
